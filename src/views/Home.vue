@@ -7,9 +7,10 @@
         <p>{{$route.name}}</p>
         <Button type="primary" @click="_loginout" style="margin-right: 8px; margin-bottom: 8px;">退出</Button>
         <!--      <router-link to="/warn">-->
-        <Button type="primary" @click="_toMethods" style="margin-bottom: 8px;">
+        <Button type="primary" @click="_toMethods" style="margin-bottom: 8px;margin-right: 8px;">
             <div class="children" >我是子路由组件</div>
         </Button>
+        <Button type="primary" @click="toStroe" style="margin-bottom: 8px;">store组件</Button>
         <!--      </router-link>-->
         <div class="content">
             <router-view></router-view>
@@ -28,9 +29,12 @@
             <div class="btn-box-btn">按钮</div>
         </div>
         <Button @click="_downLoad">下载</Button>
-        <learn v-slot:default="muchPeople" :valueParent="parentValue" @changeValue="change_value">
-          <p class="people">{{muchPeople.people}}</p>
-          <p v-for="(item, index) in muchPeople.people">{{ item }}</p>
+        <learn v-slot="muchPeople" :valueParent="parentValue" @changeValue="change_value">
+          <p class="people">{{muchPeople.people.name}}</p>
+<!--          <p v-for="(item, index) in muchPeople.people">{{ item }}</p>-->
+<!--          <template v-slot="muchPeople">-->
+<!--            {{muchPeople.people.name}}-->
+<!--          </template>-->
             <!-- <p>把我放在插槽里</p>
             <template v-slot:header>
               <h1>我要去找名字叫做“header”的插槽</h1>
@@ -50,9 +54,9 @@
         <!-- <learn v-slot:default="people">
           {{people}}
         </learn> -->
-        <div v-for="(item,index) in list" :key="index">
-            <div :data="item">{{item}}</div>
-            <Button @click="delClick(index)">{{item}}</Button>
+        <div v-for="(item,index) in list" :key="index" style="border: 2px solid lawngreen; margin-bottom: 12px;">
+            <div :data="item" v-if="item.id !== 2">{{item}}</div>
+            <Button @click="delClick(index)" v-if="item.id !== 2">{{item}}</Button>
         </div>
         <Button>{{$store.state.count}}</Button>
         <Button @click="mutationsAddCount(1)">加法</Button>
@@ -105,6 +109,8 @@
     },
     data () {
       return {
+        newKeyStr: '',
+        newKeyObj: {},
         goods: '',
         info: '父组件的信息',
         account: '',
@@ -140,12 +146,12 @@
       }
     },
     computed: {
+      ...mapGetters([
+        `doneTodosCount`,
+      ]),
       count () {
         return '大卫'
       },
-      ...mapGetters([
-        `doneTodosCount`,
-      ])
     },
     // computed: mapState({
     //   doneTodosCount () {
@@ -164,13 +170,14 @@
     //   }
     // }),
     mounted () {
-      console.log(process.env.NODE_ENV)
+      console.log('process.env.NODE_ENV', process.env.NODE_ENV)
       console.log(this.$store.getters.doneTodosCount)
       console.log(this.$store.getters.getTodoById(2)) // -> { id: 2, text: '...', done: false }
       this.account = this.cookie.getCookie('LoginName')
       console.log(localStorage.getItem('loginInfo'))
       console.log(this.$store.state)
       // this._defineProperty()
+      this.key()
     },
     beforeDestroy() {
       console.log('页面销毁之前')
@@ -186,6 +193,10 @@
         localStorage.clear()
         // 跳转至登录界面
         this.$router.replace('/login')
+      },
+      key(){
+        this.$set( this.$data,'newKey', '新属性')
+        console.log(this.$data)
       },
       _toMethods () {
         const id = '1'
@@ -206,6 +217,9 @@
         //     id: id
         //   }
         // })
+      },
+      toStroe() {
+        this.$router.push('/store')
       },
       _cahangeStore1 () {
         this.$store.commit('increment', { num: 2 })
@@ -378,6 +392,16 @@
         this.parentValue = valueChild
       }
 
+    },
+    beforeRouteUpdate(to, form, next) {
+      console.log('beforeRouteUpdate')
+      const answer = window.confirm('Do you really want to enter? you have unsaved changes!')
+      if (answer) next()
+      else next(false)
+    },
+    beforeRouteEnter(to, form, next) {
+      console.log('beforeRouteEnter', to, form, next)
+      next()
     }
   }
 </script>

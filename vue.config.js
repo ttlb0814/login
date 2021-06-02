@@ -18,12 +18,13 @@ module.exports = {
   },
 
   configureWebpack: config => {
+    console.log(config)
     //预编译
     if (process.env.NODE_ENV === 'production') {
-      // config.plugin('html').tap(args => {
-      //   args[0].isProd = true
-      //   return args
-      // })
+      config.plugin('html').tap(args => {
+        args[0].isProd = true
+        return args
+      })
       // 为生产环境修改配置...
       return {
         plugins: [
@@ -47,8 +48,6 @@ module.exports = {
         ],
       }
     } else {
-
-        console.log(config)
         // config.plugin('html').tap(args => {
         //   console.log(args)
         //   args[0].isProd = false

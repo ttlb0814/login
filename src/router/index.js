@@ -16,6 +16,10 @@ const routes = [
     name: 'Home',
     component: () =>
       import(/* webpackChunkName: "about" */ '../views/Home.vue'),
+    beforeEnter(to, form, next) {
+      console.log('beforeEnter', to, form, next)
+      next()
+    },
     children: [
       {
         path: 'warn',
@@ -50,7 +54,12 @@ const routes = [
     // component: learn
     component: () =>
       import(/* webpackChunkName: "methods" */ '../components/motheds.vue'),
-    // redirect: '/learn'
+    redirect: '/learn'
+  },
+  {
+    path: '/store',
+    name: 'store',
+    component: () => import(/* webpackChunkName: "store" */ '../components/store')
   },
   {
     path: '/404',
@@ -72,22 +81,33 @@ const router = new VueRouter({
 * next:决定是否通过
 */
 
-// router.beforeEach((to, form, next) => {
-//  如果跳转的页面不出现，则跳转到 404 页面
-//   if (to.matched.length === 0) {
-//     next('/404')
-//   }
-  // if (cookie.getCookie('openId')) {
-  // console.log(localStorage.getItem('loginInfo'))
-  // if (to.path === '/login') next()
-  // else {
-  //   let token = localStorage.getItem('Authorization')
-  //   if (token) next()
-    // else {
-    //   alert('尚未登录，请先登录')
-    //   next('/login')
-    // }
-  // }
-// })
+router.beforeEach((to, form, next) => {
+  console.log('beforeEach', to)
+  // 如果跳转的页面不出现，则跳转到 404 页面
+  if (to.matched.length === 0) {
+    next('/404')
+  }
+  if (cookie.getCookie('openId')) {
+    console.log(localStorage.getItem('loginInfo'))
+    if (to.path === '/login') next()
+    else {
+      let token = localStorage.getItem('Authorization')
+      if (token) next()
+      else {
+        alert('尚未登录，请先登录')
+        next('/login')
+      }
+    }
+  } else next()
+})
+
+router.beforeResolve((to, form, next) => {
+  console.log('beforeResolve')
+  next()
+})
+
+router.afterEach((to, from) => {
+  console.log('afterEach')
+})
 
 export default router

@@ -4,6 +4,9 @@ import Store from 'element-ui/packages/cascader-panel/src/store'
 import fa from 'element-ui/src/locale/lang/fa'
 import http from '../api/http'
 
+import app from './modules/app'
+import bus from './modules/bus'
+
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -100,6 +103,10 @@ export default new Vuex.Store({
     }
   },
   strict: true,// 严格模式不能直接在actions修改state https://vuex.vuejs.org/zh/guide/strict.html
-  modules: {}
+  modules: {
+    namespaced: true, // 为了解决不同模块命名冲突的问题
+    app,
+    bus
+  }
 })
 // export default store;

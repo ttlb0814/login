@@ -4,11 +4,11 @@
     66
     <div class=""></div>
     <slot name="header"></slot>
-    <slot></slot>
+<!--    <slot></slot>-->
     <slot name="footer"></slot>
     <!-- <slot></slot> -->
     <slot name="info"></slot>
-    <slot :people="people_name">{{ people.name }}</slot>
+    <slot :people="people">默认插槽内容</slot>
     <!-- <slot :data="msg"></slot> -->
     <el-row>
       <el-col :span="12">
@@ -20,6 +20,7 @@
       </el-col>
     </el-row>
     <Button @click="changeValue(valueParent)">{{valueParent}}</Button>
+    <Button @click="toStore">store组件</Button>
   </div>
 </template>
 
@@ -53,7 +54,22 @@ export default {
       console.log(valueParnet)
       // this.$parent.changevalue(valueParnet + 'changed')
       this.$emit('changeValue', valueParnet + 'changed')
+    },
+    toStore() {
+      this.$router.push('/store')
     }
+  },
+  beforeRouteLeave(to, from, next) {
+    console.log('beforeRouteLeave')
+    const answer = window.confirm('Do you really want to leave? you have unsaved changes!')
+    if (answer) next()
+    else next(false)
+  },
+  beforeRouteEnter(to, from, next) {
+    next(vm =>{
+      // beforeRouteEnter 方法返回组件实例，可以通过该参数访问组件实例
+      console.log(vm, vm.people.name)
+    })
   }
 }
 </script>
