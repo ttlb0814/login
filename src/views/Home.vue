@@ -2,9 +2,9 @@
     <div class="home">
         <!--    <img alt="Vue logo" src="../assets/logo.png" />-->
         欢迎~~
-        <Input disabled v-model="account" />
+        <el-input disabled v-model="account" />
         <!--      <Input disabled v-model="account" />-->
-        <p>{{$route.name}}</p>
+        <p style="color: red">{{$route.name}}</p>
         <Button type="primary" @click="_loginout" style="margin-right: 8px; margin-bottom: 8px;">退出</Button>
         <!--      <router-link to="/warn">-->
         <Button type="primary" @click="_toMethods" style="margin-bottom: 8px;margin-right: 8px;">
@@ -72,6 +72,7 @@
         <p>id:{{myObj.id}}, name:{{myObj.name}}, age:{{myObj.age}}</p>
         <Button @click="proxy">proxy双向绑定</Button>
         <p>{{parentValue}}</p>
+        <p></p>
     </div>
 </template>
 
@@ -178,13 +179,18 @@
       console.log(this.$store.state)
       // this._defineProperty()
       this.key()
+      console.log('route', this.$route)
     },
     beforeDestroy() {
       console.log('页面销毁之前')
+      // const answer = window.confirm('Do you really want to leave? you have unsaved changes!')
+
     },
     destroyed() {
-      console.log('页面销毁')
+      console.log('页面销毁', this.info)
+
     },
+
     methods: {
       _loginout () {
         // 调用 cookie的 clearCookie 方法删除 cookie

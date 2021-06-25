@@ -1,10 +1,18 @@
 const state = {
+  adminInfo: '',
+  username: 'ttlb0814',
+  password: '0814521',
   user: {},
   info: '正式员工',
   num: 2
 }
 
 const mutations = {
+  // 存储用户信息
+  setUserInfo (state, val) {
+    state.adminInfo = val
+  },
+
   setUser (state, val) {
     state.user = val
     console.log(state)
@@ -25,11 +33,18 @@ const getters = {
 }
 
 const actions = {
-  async actionA({state, commit}, val) {
-    setTimeout(() => {
-      commit('setNum', val)
-      console.log(state.num)
-    }, 1000)
+   actionA({state, commit}, val) {
+    return new Promise((res, rej) => {
+      // 调用延时采取promise处理宏任务
+      setTimeout(() => {
+        commit('setNum', val)
+        console.log(state.num)
+        res()
+      }, 1000)
+    })
+      // 常规写法
+      // commit('setNum', val)
+      // console.log(state.num)
   },
   async actionB({state, dispatch}, val) {
     console.log(state, val)

@@ -7,20 +7,27 @@ import About from '../views/About'
 import cookie from '../utils/cookie'
 import nofound from '../components/nofound'
 import warning from '../components/warning'
+import layout from '../layout/layout'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/',
-    name: 'Home',
-    component: () =>
-      import(/* webpackChunkName: "about" */ '../views/Home.vue'),
-    beforeEnter(to, form, next) {
-      console.log('beforeEnter', to, form, next)
-      next()
-    },
+    name: 'layout',
+    component: layout,
+    redirect: '/home',
     children: [
+      {
+        name: Home,
+        path: '/home',
+        component: () =>
+          import(/* webpackChunkName: "about" */ '../views/Home.vue'),
+        beforeEnter(to, form, next) {
+          console.log('beforeEnter', to, form, next)
+          next()
+        }
+      },
       {
         path: 'warn',
         name: 'warning',
@@ -30,12 +37,12 @@ const routes = [
   },
   {
     path: '/login',
-    name: 'About',
+    name: 'login',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () =>
-      import(/* webpackChunkName: "about" */ '../views/About.vue')
+      import(/* webpackChunkName: "about" */ '../views/login')
   },
   {
     path: '/learn',
@@ -59,19 +66,32 @@ const routes = [
   {
     path: '/store',
     name: 'store',
-    component: () => import(/* webpackChunkName: "store" */ '../components/store')
+    component: () => import(/* webpackChunkName: "store" */ '../components/store'),
+    meta: {
+      keepAlive: true
+    }
+  },
+  {
+    path: '/computed',
+    name: 'computed',
+    component: () => import(/* webpackChunkName: "computed" */'../components/computed')
   },
   {
     path: '/404',
     name: 'nofound',
     component: nofound,
-
+  },
+  {
+    path: '*',
+    name: '',
+    redirect: '/404'
   }
+
 ]
 
 const router = new VueRouter({
   routes,
-  // mode: 'history',
+  mode: 'hash',
 })
 
 /*
@@ -84,14 +104,14 @@ const router = new VueRouter({
 router.beforeEach((to, form, next) => {
   console.log('beforeEach', to)
   // 如果跳转的页面不出现，则跳转到 404 页面
-  if (to.matched.length === 0) {
-    next('/404')
-  }
-  if (cookie.getCookie('openId')) {
-    console.log(localStorage.getItem('loginInfo'))
+  // if (to.matched.length === 0) {
+  //   next('/404')
+  // }
+  if (cookie.getCookie('user')) {
+
     if (to.path === '/login') next()
     else {
-      let token = localStorage.getItem('Authorization')
+      let token = localStorage.getItem('username')
       if (token) next()
       else {
         alert('尚未登录，请先登录')
