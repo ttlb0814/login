@@ -7,7 +7,8 @@
     <div @click="div_click" @contextmenu.prevent="menu_click($event)" class="divClick">
       <p @click.stop="client($event)" @contextmenu.stop.prevent="">获取鼠标点击位置</p>
     </div>
-    <p @click.native="original">监听原生事件</p>
+<!--    <p @click.native="original">监听原生事件</p>-->
+    <p @click="original">监听原生事件</p>
     <p @click="router_resolve">router.resolve</p>
     <p @click="storeAdd">store.add</p>
     <Input value="input内容" />

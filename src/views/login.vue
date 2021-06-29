@@ -21,7 +21,7 @@
               placeholder="请输入密码"
               prefix-icon="el-icon-lock"
               show-password
-              @change="_login"
+              @keyup.enter.native="_login"
               v-model="password">
           </el-input>
         </el-form-item>
@@ -60,9 +60,12 @@ name: "login",
     }
   },
   mounted () {
+    console.log(this.$route.meta.keepAlive)
+    console.log('process.env.NODE_ENV', process.env.NODE_ENV)
     console.log(localStorage.getItem('savePassword'), localStorage.getItem('username'))
     if (localStorage.getItem('savePassword')) {
       this.savePassword = true
+
       this.username = localStorage.getItem('username') || ''
       this.password = localStorage.getItem('password') || ''
     } else this.username = localStorage.getItem('username') || ''
@@ -84,11 +87,13 @@ name: "login",
         this.$message.error('请检查用户名或密码')
         return
       } else if (this.savePassword) {
+        // sessionStorage.setItem('username', this.username)
         localStorage.setItem('savePassword', this.savePassword)
         localStorage.setItem('username', this.username)
         localStorage.setItem('password', this.password)
 
       } else {
+        localStorage.setItem('username', this.username)
         // localStorage.removeItem('username')
         localStorage.removeItem('savePassword')
         localStorage.removeItem('password')

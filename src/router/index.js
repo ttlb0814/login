@@ -1,4 +1,4 @@
-// import Vue from 'vue'
+import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import learn from '../components/learn'
@@ -7,15 +7,17 @@ import About from '../views/About'
 import cookie from '../utils/cookie'
 import nofound from '../components/nofound'
 import warning from '../components/warning'
-import layout from '../layout/layout'
+import layoutdefault from '@/layout/layoutdefault'
+import el from 'element-ui/src/locale/lang/el'
+import login from '@/views/login'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/',
-    name: 'layout',
-    component: layout,
+    name: 'layoutdefault',
+    component: layoutdefault,
     redirect: '/home',
     children: [
       {
@@ -26,12 +28,49 @@ const routes = [
         beforeEnter(to, form, next) {
           console.log('beforeEnter', to, form, next)
           next()
+        },
+        meta: {
+          activeMenu: '/home'
         }
       },
       {
         path: 'warn',
         name: 'warning',
         component: warning
+      },
+      {
+        path: '/learn',
+        name: 'Learn',
+        // component: learn
+        component: () =>
+          import(/* webpackChunkName: "about" */ '../components/learn.vue'),
+        meta: {
+          activeMenu: '/learn'
+        }
+        // beforeEnter: ((to, form, next) => {
+        //   alert('去登录吧');
+        //   next('/login')
+        // })
+      },
+      {
+        path: '/methods',
+        name: 'Methods',
+        // component: learn
+        component: () =>
+          import(/* webpackChunkName: "methods" */ '../components/methods.vue'),
+        meta: {
+          activeMenu: '/methods'
+        },
+        // redirect: '/learn'
+      },
+      {
+        path: '/store',
+        name: 'store',
+        component: () => import(/* webpackChunkName: "store" */ '../components/store'),
+        meta: {
+          // keepAlive: true,
+          activeMenu: '/store'
+        }
       }
     ]
   },
@@ -42,31 +81,7 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () =>
-      import(/* webpackChunkName: "about" */ '../views/login')
-  },
-  {
-    path: '/learn',
-    name: 'Learn',
-    // component: learn
-    component: () =>
-      import(/* webpackChunkName: "about" */ '../components/learn.vue'),
-    // beforeEnter: ((to, form, next) => {
-    //   alert('去登录吧');
-    //   next('/login')
-    // })
-  },
-  {
-    path: '/motheds',
-    name: 'Motheds',
-    // component: learn
-    component: () =>
-      import(/* webpackChunkName: "methods" */ '../components/motheds.vue'),
-    redirect: '/learn'
-  },
-  {
-    path: '/store',
-    name: 'store',
-    component: () => import(/* webpackChunkName: "store" */ '../components/store'),
+      import(/* webpackChunkName: "about" */ '../views/login'),
     meta: {
       keepAlive: true
     }
@@ -77,6 +92,11 @@ const routes = [
     component: () => import(/* webpackChunkName: "computed" */'../components/computed')
   },
   {
+    path: '/chart',
+    name: 'chart',
+    component: () => import(/* webpackChunkName: "eCharts" */'../components/eCharts')
+  },
+  {
     path: '/404',
     name: 'nofound',
     component: nofound,
@@ -84,7 +104,7 @@ const routes = [
   {
     path: '*',
     name: '',
-    redirect: '/404'
+    redirect: '/login'
   }
 
 ]
@@ -107,23 +127,38 @@ router.beforeEach((to, form, next) => {
   // if (to.matched.length === 0) {
   //   next('/404')
   // }
-  if (cookie.getCookie('user')) {
+  let token = localStorage.getItem('username')
+  let cookieInfo = cookie.getCookie('user')
 
-    if (to.path === '/login') next()
-    else {
-      let token = localStorage.getItem('username')
-      if (token) next()
-      else {
-        alert('尚未登录，请先登录')
-        next('/login')
-      }
+    if (to.path === '/login'){
+      if (cookieInfo && token) {
+        console.log('登录了且去登录页，若已登录会跳转到home页')
+        next('/home')
+      } else next()
+    } else if (!cookieInfo) {
+      console.log('用户信息cookie过期')
+      // _this.$notify({title: '警告', message: '用户信息已过期，请重新登录', type: 'warning'})
+      alert('用户信息已过期，请重新登录')
+      next('/login')
+      // next()
     }
-  } else next()
+    else if (!token) {
+      console.log('未登录')
+      // _this.$notify({title: '警告', message: '尚未登录，请先登录', type: 'warning'})
+      alert('尚未登录，请先登录')
+      next('/login')
+    }else {
+      console.log('登录了去其他页面')
+       next()
+      }
+
+
 })
 
 router.beforeResolve((to, form, next) => {
   console.log('beforeResolve')
   next()
+
 })
 
 router.afterEach((to, from) => {

@@ -1,6 +1,6 @@
-// import Vue from 'vue'
+import Vue from 'vue'
 import Vuex from 'vuex'
-import Store from 'element-ui/packages/cascader-panel/src/store'
+// import Store from 'element-ui/packages/cascader-panel/src/store'
 import fa from 'element-ui/src/locale/lang/fa'
 import http from '../api/http'
 

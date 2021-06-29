@@ -43,7 +43,7 @@
         }
       }
     },
-    inject:['goods'],
+    // inject:['goods'],
     created () {
       // this._forEach()
       // this._forOf()

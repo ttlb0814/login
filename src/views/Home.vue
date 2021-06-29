@@ -5,7 +5,7 @@
         <el-input disabled v-model="account" />
         <!--      <Input disabled v-model="account" />-->
         <p style="color: red">{{$route.name}}</p>
-        <Button type="primary" @click="_loginout" style="margin-right: 8px; margin-bottom: 8px;">退出</Button>
+        <Button type="primary" @click="_loginOut" style="margin-right: 8px; margin-bottom: 8px;">退出</Button>
         <!--      <router-link to="/warn">-->
         <Button type="primary" @click="_toMethods" style="margin-bottom: 8px;margin-right: 8px;">
             <div class="children" >我是子路由组件</div>
@@ -73,6 +73,7 @@
         <Button @click="proxy">proxy双向绑定</Button>
         <p>{{parentValue}}</p>
         <p></p>
+      <gonggong></gonggong>
     </div>
 </template>
 
@@ -192,16 +193,15 @@
     },
 
     methods: {
-      _loginout () {
+      _loginOut () {
         // 调用 cookie的 clearCookie 方法删除 cookie
-        this.cookie.clearCookie('LoginName')
-        this.cookie.clearCookie('openId')
-        localStorage.clear()
+        this.cookie.clearCookie('user')
+        // localStorage.clear()
         // 跳转至登录界面
         this.$router.replace('/login')
       },
       key(){
-        this.$set( this.$data,'newKey', '新属性')
+        // this.$set( this.$data,'newKey', '新属性')
         console.log(this.$data)
       },
       _toMethods () {

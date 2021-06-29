@@ -16,11 +16,26 @@ module.exports = {
     //   }
     // }
   },
+  // resolve: {
+  //   alias: {
+  //     '@': resolve('src')
+  //   }
+  // },
 
-  configureWebpack: config => {
-    console.log(config)
+  chainWebpack: config => {
+    console.log('config', config)
     //预编译
     if (process.env.NODE_ENV === 'production') {
+      config.entry('app').clear().add('./src/main-pro.js')
+      // 为生产环境修改配置...
+      // CDN引入
+      config.set('externals', {
+        'vue': 'Vue',
+        'vuex': 'Vuex',
+        "view-design": 'iview',
+        'iview': 'ViewUI',
+        'element-ui': 'Element-ui'
+      })
       config.plugin('html').tap(args => {
         args[0].isProd = true
         return args
@@ -48,20 +63,15 @@ module.exports = {
         ],
       }
     } else {
+      console.log('config', config)
+        config.entry('app').clear().add('./src/main.js')
         // config.plugin('html').tap(args => {
         //   console.log(args)
         //   args[0].isProd = false
         //   return args
         // })
-        // 为开发环境修改配置...
-        // CDN引入
-        // config.set('externals', {
-        //   'vue': 'Vue',
-        //   'vuex': 'Vuex',
-        //   "view-design": 'iview',
-        //   'iview': 'ViewUI',
-        //   'element-ui': 'Element-ui'
-        // })
+
+
 
     }
   }

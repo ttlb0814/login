@@ -6,7 +6,8 @@
 <!--      <router-link to="/learn">Learn</router-link> |-->
 <!--      <router-link to="/motheds">Motheds</router-link>-->
 <!--    </div>-->
-    <router-view />
+    <layout v-if="!$route.meta.keepAlive"><router-view /></layout>
+    <router-view v-if="$route.meta.keepAlive" />
 <!--    设置路由缓存 方法一  -->
 <!--    <keep-alive include="store">-->
 <!--      <router-view></router-view>-->
@@ -17,6 +18,13 @@
 
   </div>
 </template>
+<script>
+import layout from '@/layout/layout'
+export default {
+  name: 'App',
+  components:{layout}
+}
+</script>
 
 <style lang="scss">
 #app {
