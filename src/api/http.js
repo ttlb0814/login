@@ -97,7 +97,6 @@ http.open = function(url, data, target, method) {
   form.submit()
 };
 
-
 http.getExel=function(url, params, index) {
   console.log(url, params)
   return new Promise(function (resolve, reject) {
