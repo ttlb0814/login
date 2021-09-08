@@ -1,7 +1,8 @@
 <template>
   <div>
-    <!-- {{msg}} -->
+    <p @click="changemsg">{{msg}}</p>
     66
+    <p>{{count}}</p>
     <div class=""></div>
     <slot name="header"></slot>
 <!--    <slot></slot>-->
@@ -21,6 +22,7 @@
     </el-row>
     <Button @click="changeValue(valueParent)">{{valueParent}}</Button>
     <Button @click="toStore">store组件</Button>
+
   </div>
 </template>
 
@@ -41,7 +43,30 @@ export default {
     }
   },
   props: ['valueParent'],
+  created () {
+    console.log('使用learn组件')
+  },
+  computed: {
+    count() {
+      console.log(this.user.length ++)
+      return this.user.length ++
+    }
+  },
+  watch: {
+    msg(val1, val2) {
+      console.log(val1,val2)
+    }
+  },
   methods: {
+    num() {
+      console.log('挂载*************')
+    },
+    changemsg() {
+        this.msg = "Vue"
+      const count = this.count
+      console.log(count)
+
+    },
   //     function foo() {
   //     console.log(this.bar)
   //     }
@@ -57,7 +82,8 @@ export default {
     },
     toStore() {
       this.$router.push('/store')
-    }
+    },
+
   },
   beforeRouteLeave(to, from, next) {
     console.log('beforeRouteLeave')

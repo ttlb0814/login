@@ -1,12 +1,12 @@
 <template>
   <div>
-    <el-menu :default-active="activeIndex" unique-opened router class="menu" @select="menuSelect">
+    <el-menu :default-active="$route.path" unique-opened router class="menu" @select="menuSelect">
       <el-submenu index="1">
         <template slot="title"  class="menu-out"><span style="color: rgb(191, 203, 217);">首页</span></template>
         <el-menu-item index="/methods">子路由组件</el-menu-item>
         <el-menu-item index="/store">store组件</el-menu-item>
       </el-submenu>
-      <el-menu-item index="2" class="menu-out">消息中心</el-menu-item>
+      <el-menu-item index="/" class="menu-out">消息中心</el-menu-item>
     </el-menu>
   </div>
 </template>

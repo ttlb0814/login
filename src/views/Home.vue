@@ -1,5 +1,7 @@
 <template>
     <div class="home">
+      <router-link to="/">{{ $route.meta.keepAlive && 'true' || 'false' }}</router-link> |
+      <router-link to="/">{{ !$route.meta.keepAlive && 'true' || 'false' }}</router-link> |
         <!--    <img alt="Vue logo" src="../assets/logo.png" />-->
         欢迎~~
         <el-input disabled v-model="account" />
@@ -24,12 +26,13 @@
         <Button @click="observe(library)"> observe</Button>
         <Button @click="changeLibrary"> changeLibrary</Button>
         <Button @click="_yibu">异步</Button>
+      <Button @click="nextTick">nextTick</Button>
         <div class="btn-box">
             <input type="text" value="按钮" />
             <div class="btn-box-btn">按钮</div>
         </div>
         <Button @click="_downLoad">下载</Button>
-        <learn v-slot="muchPeople" :valueParent="parentValue" @changeValue="change_value">
+        <learn ref="learn" v-slot="muchPeople" :valueParent="parentValue" @changeValue="change_value">
           <p class="people">{{muchPeople.people.name}}</p>
 <!--          <p v-for="(item, index) in muchPeople.people">{{ item }}</p>-->
 <!--          <template v-slot="muchPeople">-->
@@ -74,6 +77,7 @@
         <p>{{parentValue}}</p>
         <p></p>
       <gonggong></gonggong>
+
     </div>
 </template>
 
@@ -138,6 +142,7 @@
           }
         ],
         message: '信息1',
+        msg: '一个msg',
         copyMessage: '',
         myObj: {
           id: '我是myObj的ID',
@@ -171,7 +176,14 @@
     //     return state.count + this.localCount
     //   }
     // }),
+    created () {
+      // this.$refs.learn.num()
+    },
+    beforeMount () {
+      // this.$refs.learn.num()
+    },
     mounted () {
+      this.$refs.learn.num()
       console.log('process.env.NODE_ENV', process.env.NODE_ENV)
       console.log(this.$store.getters.doneTodosCount)
       console.log(this.$store.getters.getTodoById(2)) // -> { id: 2, text: '...', done: false }
@@ -206,23 +218,15 @@
       },
       _toMethods () {
         const id = '1'
-        // this.$router.push({
-        //   path: `/motheds/${id}`
-        // }) 需要设置路由为 path: "/motheds/：id",
-        // parmary 方式 ，需要和 路由配置的 name对应，不用 path
-        this.$router.push({
-          name: 'Motheds',
-          params: {
-            id: id
-          }
-        })
-        // query方式，需用path
-        // this.$router.push({
-        //   path: 'motheds',
-        //   query: {
-        //     id: id
-        //   }
-        // })
+        // 需要设置路由为 path: "/motheds/:id" !!!
+        // this.$router.push({path: `/methods/${id}`})
+        // this.$router.push('/methods')
+
+        // parmary 方式 ，需要和 路由配置的 name对应，区分大小写，不用 path，页面刷新参数会消失
+        this.$router.push({name: 'Methods', params: {id: id}})
+
+        // query方式，需用path,页面刷新参数不消失，推荐
+        this.$router.push({path: 'methods',query: {id: id}})
       },
       toStroe() {
         this.$router.push('/store')
@@ -396,6 +400,10 @@
       change_value(valueChild) {
         console.log(valueChild)
         this.parentValue = valueChild
+      },
+      nextTick() {
+        this.msg = '新的msg'
+        console.log(this.$el.textContent)
       }
 
     },
@@ -408,7 +416,8 @@
     beforeRouteEnter(to, form, next) {
       console.log('beforeRouteEnter', to, form, next)
       next()
-    }
+    },
+
   }
 </script>
 

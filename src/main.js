@@ -40,7 +40,7 @@ Vue.prototype.cookie = cookie
 
 Vue.config.productionTip = false;
 
-new Vue({
+var vue = new Vue({
   router,
   store,
   render: h => h(App),
@@ -48,3 +48,4 @@ new Vue({
     document.dispatchEvent(new Event('render-event'))
   }
 }).$mount("#app");
+export  default vue

@@ -26,7 +26,7 @@ name: "layout",
     this.cookieInfo = this.cookie.getCookie('user')
     this.username = localStorage.getItem('username')
     console.log(this.cookieInfo, this.username)
-    alert(this.cookieInfo + this.username)
+    // alert(this.cookieInfo + this.username)
   }
 }
 </script>

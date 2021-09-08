@@ -25,18 +25,22 @@ const routes = [
         path: '/home',
         component: () =>
           import(/* webpackChunkName: "about" */ '../views/Home.vue'),
-        beforeEnter(to, form, next) {
-          console.log('beforeEnter', to, form, next)
+        beforeEnter(to, from, next) {
+          console.log('beforeEnter', to, from, next)
           next()
         },
         meta: {
+          remark: '首页',
           activeMenu: '/home'
         }
       },
       {
         path: 'warn',
         name: 'warning',
-        component: warning
+        component: warning,
+        meta: {
+          remark: '警告'
+        }
       },
       {
         path: '/learn',
@@ -45,9 +49,10 @@ const routes = [
         component: () =>
           import(/* webpackChunkName: "about" */ '../components/learn.vue'),
         meta: {
+          remark: '学习',
           activeMenu: '/learn'
         }
-        // beforeEnter: ((to, form, next) => {
+        // beforeEnter: ((to, from, next) => {
         //   alert('去登录吧');
         //   next('/login')
         // })
@@ -59,6 +64,7 @@ const routes = [
         component: () =>
           import(/* webpackChunkName: "methods" */ '../components/methods.vue'),
         meta: {
+          remark: '方法',
           activeMenu: '/methods'
         },
         // redirect: '/learn'
@@ -68,6 +74,7 @@ const routes = [
         name: 'store',
         component: () => import(/* webpackChunkName: "store" */ '../components/store'),
         meta: {
+          remark: '公共数据',
           // keepAlive: true,
           activeMenu: '/store'
         }
@@ -89,7 +96,10 @@ const routes = [
   {
     path: '/computed',
     name: 'computed',
-    component: () => import(/* webpackChunkName: "computed" */'../components/computed')
+    component: () => import(/* webpackChunkName: "computed" */'../components/computed'),
+    meta: {
+      remark: '计算'
+    }
   },
   {
     path: '/chart',
@@ -121,8 +131,8 @@ const router = new VueRouter({
 * next:决定是否通过
 */
 
-router.beforeEach((to, form, next) => {
-  console.log('beforeEach', to)
+router.beforeEach(async (to, from, next) => {
+  console.log('beforeEach', to, from)
   // 如果跳转的页面不出现，则跳转到 404 页面
   // if (to.matched.length === 0) {
   //   next('/404')
@@ -133,29 +143,28 @@ router.beforeEach((to, form, next) => {
     if (to.path === '/login'){
       if (cookieInfo && token) {
         console.log('登录了且去登录页，若已登录会跳转到home页')
-        next('/home')
-      } else next()
+        await next('/home')
+      } else await next()
     } else if (!cookieInfo) {
       console.log('用户信息cookie过期')
       // _this.$notify({title: '警告', message: '用户信息已过期，请重新登录', type: 'warning'})
       alert('用户信息已过期，请重新登录')
-      next('/login')
+      await next('/login')
       // next()
-    }
-    else if (!token) {
+    } else if (!token) {
       console.log('未登录')
       // _this.$notify({title: '警告', message: '尚未登录，请先登录', type: 'warning'})
       alert('尚未登录，请先登录')
-      next('/login')
+      await next('/login')
     }else {
       console.log('登录了去其他页面')
-       next()
+      await next()
       }
 
 
 })
 
-router.beforeResolve((to, form, next) => {
+router.beforeResolve((to, from, next) => {
   console.log('beforeResolve')
   next()
 

@@ -109,12 +109,12 @@ name: "login",
     //  把密码加密模仿用户信息的样子，嘿嘿~
       /*
         保存cookie需要把信息以对象形式传入，后面可跟存储天数
-        如 his.cookie.setCookie(userInfo， 7) 保存7天
+        如 this.cookie.setCookie(userInfo， 7) 保存7天
         由于封装的方法是批量存储，所以读取时需要读取对象内的属性，无法读取对象名
        */
       const adminInfo = sha1(this.password)
       const userInfo = {user: adminInfo}
-      this.cookie.setCookie(userInfo)
+      this.cookie.setCookie(userInfo, 7)
       console.log(this.cookie.getCookie('user'))
       this.setUserInfo(adminInfo)
       console.log(this.$store.state.app.adminInfo)
